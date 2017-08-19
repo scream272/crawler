@@ -1,0 +1,121 @@
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
+# 导入模块
+
+
+'''
+
+需要的工具与知识：
+1. 创建一个文件夹，并记住路径，方便后面的文件导入
+2.获得网页中的目录链接，每个链接创建一个文件，并保存到该文件夹里，文件名为链接名
+3.将链接目录中的所有内容保存到文件中
+
+一个函数，函数设计：
+input： 网页主链接
+输出： 创建文件夹和文件
+
+'''
+import Module_1
+import urllib2
+
+# 现在可以调用模块里包含的函数了
+#url = "http://www.runoob.com/python/python-socket.html"
+#data = urllib2.urlopen(url)
+#print data.read()
+
+'''
+def mkdir(path):
+    import os
+
+    path = path.strip()
+    path = path.rstrip("\\")
+
+    isExists = os.path.exists(path)
+
+    if not isExists:
+        os.makedirs(path)
+        print path+'创建成功'
+        return True
+    else:
+        print path+'目录已存在'
+        return False
+
+mkpath = "./path_1"
+
+mkdir(mkpath)
+
+'''
+'''
+1.在主网页的源代码上找到需要循环处理的板块：
+    下载整个网页
+    在下载的文件中找到需要的模块
+    将符合要求的模块内容替换原来的文件
+2.分别抽取每一条的title作为文件名，href作为链接
+'''
+
+
+#for i in urls:
+
+file_cre = open('./path_1/file_1','w')   #文件名需要能从网页获取
+
+data = urllib2.urlopen('http://www.runoob.com/python/python-100-examples.html')
+file_cre.write(data.read())
+file_cre.close()
+
+all_the_text = open('./path_1/file_1').read()
+#print all_the_text.find('leftcolumn')
+#print all_the_text.find('/div',4264)
+#print all_the_text[4264:8708]
+all_the_text = all_the_text[4264:8708]
+
+
+f = file('./path_1/file_1','w')
+f.write(all_the_text)
+f.close()
+
+
+for line in open('./path_1/file_1'):
+    line = line.strip()
+    if line.find(' title="') != -1:
+        pos_1 = line.find(' title="') + 8
+        pos_2 = line.find('"',pos_1)
+        title = line[pos_1:pos_2]
+
+        if title:
+            if ('/' not in title):
+                file_cre = open(title.decode('UTF-8'), 'w')
+               # file_cre.close()
+                if line.find('/python'):
+                    pos_3 = line.find('/python')
+                    pos_4 = line.find('"', pos_3)
+                    herf = line[pos_3:pos_4]
+                    if herf:
+                        herf = 'http://www.runoob.com' + herf
+                        data = urllib2.urlopen(herf)
+                        content = data.read()
+                        # if herf == "http://www.runoob.com/python/python-intro.html":
+                        #     print content
+                        file_cre.write(content)
+                        file_cre.close()
+
+
+'''
+
+    if line.find('/python'):
+        pos_3 = line.find('/python')
+        pos_4 = line.find('"',pos_3)
+        herf = line[pos_3:pos_4]
+        #print herf
+
+
+        if title:
+            print title
+            file_cre = open(title, 'w')
+            file_cre.close()
+            if herf:
+                herf = 'https://www./' + herf
+                #print herf
+               # data = urllib2.urlopen(herf)
+               # file_cre.write(data.read())
+'''
